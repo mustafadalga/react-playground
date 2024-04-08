@@ -1,4 +1,4 @@
-import createSlice from './createSlice.ts';
+import { createSlice } from "state-syncer";
 
 type State = {
     text: string
