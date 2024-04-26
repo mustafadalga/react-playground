@@ -3,14 +3,6 @@ import AnimateBubbles from "@/components/AnimateBubbles.tsx";
 import Buble from "@/components/Buble.tsx";
 
 function shuffleArray(array) {
-    const tempArray=[...array];
-    const first =tempArray[0];
-    tempArray[0] = tempArray[tempArray.length - 1];
-    tempArray[tempArray.length - 1] = first;
-
-    return tempArray;
-
-
     return array
         .map(a => ({ sort: Math.random(), value: a }))
         .sort((a, b) => a.sort - b.sort)
@@ -18,13 +10,8 @@ function shuffleArray(array) {
 }
 
 function App() {
-    const [ images, setImages ] = useState([
-        { id: "1", text: "Image 1" },
-        { id: "2", text: "Image 2" },
-        // { id: "3", text: "Image 3" },
-        // { id: "4", text: "Image 4" },
-        // { id: "5", text: "Image 5" }
-    ]);
+    const [ images, setImages ] = useState([]);
+
 
     const refs = useRef([]);
     refs.current = images.map((_, i) => refs.current[i] ?? createRef());
@@ -33,11 +20,21 @@ function App() {
         const shuffledImages = shuffleArray(images);
         setImages(shuffledImages);
     };
+
+    useEffect(() => {
+        const createImages = () => {
+            const images = Array.from({ length: 20 }).map((_, index) => ({
+                id: index + 1,
+                text: `Image ${index + 1}`
+            }))
+            setImages(images)
+        }
+
+        createImages()
+    }, [])
     return (
-        <main className="grid gap-5 p-10">
-            <div>
-                <div className="bubbles-wrapper">
-                    <div className="bubbles-group">
+        <main className="grid place-items-center gap-5 p-10">
+                    <div className="grid gap-4 grid-cols-5">
                         <AnimateBubbles>
                             {images.map((image, index) => <Buble
                                 key={image.id}
@@ -46,16 +43,13 @@ function App() {
                                 id={image.id}
                             />)}
                         </AnimateBubbles>
-
                     </div>
-                </div>
 
                 <div className="button-wrapper">
                     <button className="button" onClick={reorder}>
                         Re-order images
                     </button>
                 </div>
-            </div>
         </main>
     )
 }

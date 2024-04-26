@@ -40,13 +40,14 @@ const AnimateBubbles = ({ children }) => {
             const domNode = child.ref.current;
             const firstBox = prevBoundingBox[child.key];
             const lastBox = boundingBox[child.key];
-            const changeInX = firstBox.left - lastBox.left;
+            const deltaX = firstBox.left - lastBox.left;
+            const deltaY = firstBox.top - lastBox.top;
 
-            if (changeInX) {
+            if (deltaX || deltaY) {
 
                 requestAnimationFrame(() => {
 
-                    domNode.style.transform = `translateX(${changeInX}px)`;
+                    domNode.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
                     domNode.style.transition = "transform 0s";
 
                     requestAnimationFrame(() => {
