@@ -1,35 +1,49 @@
-import React, { useEffect, Children, useState, useLayoutEffect } from "react";
+import {
+    useEffect,
+    Children,
+    useState,
+    useLayoutEffect,
+    ReactNode,
+    ReactElement,
+    RefObject,
+} from "react";
 import usePrevious from "@/hooks/usePrevious.ts";
 
+interface ChildComponent extends ReactElement {
+    ref: RefObject<HTMLElement>;
+}
 
-const calculateBoundingBoxes = children => {
-    const boundingBoxes = {};
+interface BoundingBox {
+    [key: number]: DOMRect
+}
 
-    Children.forEach(children, child => {
-        const domNode = child.ref.current;
-        const nodeBoundingBox = domNode.getBoundingClientRect();
+const calculateBoundingBoxes = (children: ReactNode): BoundingBox => {
+    const boundingBoxes: BoundingBox = {};
 
-        boundingBoxes[child.key] = nodeBoundingBox;
+    Children.forEach(children, (child) => {
+        const childComponent: ChildComponent = child as ChildComponent
+        const domNode = childComponent.ref.current!;
+        boundingBoxes[childComponent.key as unknown as number] = domNode.getBoundingClientRect();
     });
 
     return boundingBoxes;
 };
 
 
-const AnimateBubbles = ({ children }) => {
-    const [boundingBox, setBoundingBox] = useState({});
-    const [prevBoundingBox, setPrevBoundingBox] = useState({});
-    const prevChildren = usePrevious(children);
+const AnimateBubbles = ({ children }: { children: ReactNode }) => {
+    const [ boundingBox, setBoundingBox ] = useState<BoundingBox>({});
+    const [ prevBoundingBox, setPrevBoundingBox ] = useState<BoundingBox>({});
+    const prevChildren = usePrevious<ReactNode>(children);
 
     useLayoutEffect(() => {
         const newBoundingBox = calculateBoundingBoxes(children);
         setBoundingBox(newBoundingBox);
-    }, [children]);
+    }, [ children ]);
 
     useLayoutEffect(() => {
         const prevBoundingBox = calculateBoundingBoxes(prevChildren);
-         setPrevBoundingBox(prevBoundingBox);
-    }, [prevChildren]);
+        setPrevBoundingBox(prevBoundingBox);
+    }, [ prevChildren ]);
 
     useEffect(() => {
         const hasPrevBoundingBox = !!Object.keys(prevBoundingBox).length;
@@ -37,34 +51,46 @@ const AnimateBubbles = ({ children }) => {
 
         Children.forEach(children, child => {
 
-            const domNode = child.ref.current;
-            const firstBox = prevBoundingBox[child.key];
-            const lastBox = boundingBox[child.key];
-            const deltaX = firstBox.left - lastBox.left;
-            const deltaY = firstBox.top - lastBox.top;
+            const childComponent: ChildComponent = child as ChildComponent
+            const domNode = childComponent.ref.current;
+            if (!domNode) return
 
-            if (deltaX || deltaY) {
+            const firstBox = prevBoundingBox[childComponent.key as unknown as number];
+            const lastBox = boundingBox[childComponent.key as unknown as number];
+            if (firstBox && lastBox) {
+                const deltaX = firstBox.left - lastBox.left;
+                const deltaY = firstBox.top - lastBox.top;
 
-                requestAnimationFrame(() => {
-
-                    domNode.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
-                    domNode.style.transition = "transform 0s";
+                if (deltaX || deltaY) {
 
                     requestAnimationFrame(() => {
-                        // After the previous frame, remove
-                        // the transistion to play the animation
-                        domNode.style.transform = "";
-                        domNode.style.transition = "transform 500ms";
+
+                        domNode.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+                        domNode.style.transition = "transform 0s";
+
+                        requestAnimationFrame(() => {
+                            // After the previous frame, remove
+                            // the transistion to play the animation
+                            domNode.style.transform = "";
+                            domNode.style.transition = "transform 500ms";
+                        });
+
+                    })
+                }
+            } else if (lastBox) {
+                requestAnimationFrame(() => {
+                    domNode.style.opacity = "0";
+                    domNode.style.transform = "scale(0)";
+                    requestAnimationFrame(() => {
+                        domNode.style.opacity = "1";
+                        domNode.style.transform = "scale(1)";
+                        domNode.style.transition = "opacity 500ms, transform 500ms";
                     });
-
-                })
+                });
             }
-
         })
 
-
     }, [ boundingBox, prevBoundingBox, children ])
-
 
     return children;
 };
