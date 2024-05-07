@@ -1,79 +1,73 @@
-import { createRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import AnimateBubbles from "@/components/AnimateBubbles.tsx";
-import Buble from "@/components/Buble.tsx";
-import { movies } from "@/data/movies.ts";
-import Kinds from "@/components/Kinds.tsx";
-import Input from "@/components/Input.tsx";
+import {  useMemo, useState } from "react";
+import PropStateAdjuster from "@/components/PropStateAdjuster.tsx";
+import RiskyUpdateComponent from "@/components/RiskyUpdateComponent.tsx";
 
-function App() {
-    const filterOptionsRef = useRef<HTMLDivElement>(null!);
-    const [ showFilter, setShowFilter ] = useState(true);
-    const [ form, setForm ] = useState({
-        title: "",
-        kind: ""
-    })
 
-    const filteredMovies = useMemo(() => {
-        return movies.filter((movie) => (!form.kind || (form.kind && movie.kinds.includes(form.kind))) && movie.title.toLowerCase().includes(form.title.toLowerCase()))
-    }, [ form ]);
+function getFilteredTodos(todos, filter) {
+    for (let i = 0; i < 1000000; i++) {
 
-    const updateForm = useCallback((type: "title" | "kind", value: string) => {
-        setForm({ ...form, [type]: value });
-    }, [ form ]);
+    }
+    switch (filter) {
+        case 'completed':
+            return todos.filter(todo => todo.completed);
+        case 'active':
+            return todos.filter(todo => !todo.completed);
+        default:
+            return todos;
+    }
+}
 
-    useEffect(() => {
-        const handleTransitionEnd = (event: AnimationEvent) => {
-            if (event.animationName == 'fade-out-bck' && !showFilter) {
-                filterOptionsRef.current.classList.add('hidden');
-            }
-        };
+function TodoList({ todos, filter,setTodo }) {
+    const [newTodo, setNewTodo] = useState('');
 
-        const showFilterOptions = () => {
-            filterOptionsRef.current.classList.remove('hidden', "fade-out-bck");
-            filterOptionsRef.current.classList.add("fade-in-fwd");
-        }
+    console.time('2filter array');
 
-        const hideFilterOptions = () => {
-            filterOptionsRef.current.classList.remove("fade-in-fwd");
-            filterOptionsRef.current.classList.add("fade-out-bck");
-        }
+    const visibleTodos = useMemo(() => {
+        const x =getFilteredTodos(todos, filter);
+        return x
+    }, [todos, filter]);
+    console.timeEnd('3filter array');
 
-        filterOptionsRef.current.addEventListener("animationend", handleTransitionEnd);
 
-        showFilter ? showFilterOptions() : hideFilterOptions();
-
-        return () => filterOptionsRef.current.removeEventListener('animationend', handleTransitionEnd);
-    }, [ showFilter ]);
+    const addTodo = () => {
+        setTodo({ text: newTodo, completed: false });
+        setNewTodo(''); // Reset input
+    };
 
     return (
-        <main className="grid place-items-center gap-5 p-10">
-            <button
-                type="button"
-                onClick={() => setShowFilter(prevState => !prevState)}
-                className="text-indigo-500 bg-indigo-100 border border-solid border-indigo-300 px-5 py-1 rounded-lg
-                ml-auto">
-                {showFilter ? 'Hide' : 'Show'} Filter
-            </button>
+        <div>
+            <input
+                className="border border-gray-300 rounded-md p-2 mb-2"
+                type="text"
+                value={newTodo}
+                onChange={(e) => setNewTodo(e.target.value)}
+            />
+            <button onClick={addTodo}>Add Todo</button>
+            <ul>
+                {visibleTodos.map((todo, index) => (
+                    <li key={todo.text}>{todo.text}</li>
+                ))}
+            </ul>
+        </div>
+    );
+}
 
-            <div
-                ref={filterOptionsRef}
-                className={`my-5 grid gap-5 place-items-end`}>
-                <Kinds onSelect={kind => updateForm("kind", kind)}
-                       onClear={() => updateForm("kind", "")}/>
-                <Input input={form.title} setInput={title => updateForm("title", title)}/>
-            </div>
+export default function App(){
+    // const [todos,setTodos]=useState([
+    //     { text: 'Learn React', completed: false },
+    //     { text: 'Read documentation', completed: true },
+    //     { text: 'Build a React app', completed: false }
+    // ])
+    // const setTodo=(todo)=>{
+    //     setTodos(prevState => [...prevState, todo])
+    // }
 
-            <div className="grid gap-4 grid-cols-5">
-                <AnimateBubbles>
-                    {filteredMovies.map((movie) => <Buble
-                        key={movie.id}
-                        ref={createRef()}
-                        movie={movie}
-                    />)}
-                </AnimateBubbles>
-            </div>
-        </main>
+    return (
+        <div>
+            {/*<RiskyUpdateComponent/>*/}
+            <PropStateAdjuster/>
+        </div>
     )
 }
 
-export default App
+
