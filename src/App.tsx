@@ -1,56 +1,81 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 
 export default function App() {
     return (
         <div>
-            <ParentComponent/>
+            <SearchResults/>
         </div>
     )
 }
 
 
-function ParentComponent() {
-    const [ toggleState, setToggleState ] = useState(false);
+function SearchResults() {
+    const [ results, setResults ] = useState([]);
+    const [ query, setQuery ] = useState("");
 
-    function handleToggleChange(newState) {
-        console.log('Toggle Changed:ParentComponent - ', newState);
-        setToggleState(newState);
-    }
+    useEffect(() => {
+        let ignore = false;
+        fetchResults(query).then(json => {
+            console.log("ignore", ignore)
+            // if (!ignore) {
+                setResults(json);// This ensures that when your Effect fetches data, all responses except the last requested one will be ignored.
+            // }
+        });
+
+        return () => {
+            ignore = true
+        };
+    }, [ query ]);
 
     return (
         <div>
-            <h1>Toggle State: {toggleState ? 'On' : 'Off'}</h1>
-            <Toggle onChange={handleToggleChange}/>
+            <Input query={query} setQuery={setQuery}/>
+            <ul>
+                {results.map((movie) => (
+                    <li key={movie.id}>
+                        {movie.title} ({movie.kinds.join(", ")})
+                    </li>
+                ))}
+            </ul>
         </div>
-    );
+    )
 }
 
-function Toggle({ onChange }) {
-    const [ isOn, setIsOn ] = useState(false);
+function Input({ setQuery, query }) {
+    const [search,setSearch] = useState("");
+    const timeoutRef = useRef(null); // Reference to store the timeout
 
-    function updateToggle(nextIsOn) {
-        onChange(nextIsOn); // Notify parent component about the change
-        setIsOn(nextIsOn);
+    const handleChange = (e) => {
+        const newValue = e.target.value;
+setSearch(newValue)
+
+        if (timeoutRef.current){
+            clearTimeout(timeoutRef.current)
+        }
+
+        timeoutRef.current = setTimeout(() => {
+            setQuery(newValue);
+        }, 400);
     }
-
-    function handleClick() {
-        updateToggle(!isOn);
-    }
-
-    console.log("Toggle.tsx isOn", isOn)
-
     return (
-        <div
-            style={{
-                width: '100px',
-                height: '50px',
-                backgroundColor: isOn ? 'green' : 'red',
-                cursor: 'pointer'
-            }}
-            onClick={handleClick}
-        >
-            Toggle
-        </div>
-    );
+        <input
+            className="border border-gray-300 p-2"
+            type="text" value={search} onChange={handleChange}/>
+    )
+}
+
+async function fetchResults(query) {
+    const minDelay = 100;
+    const maxDelay = 5000;
+    const seconds = Math.round(Math.random() * (maxDelay - minDelay) + minDelay);
+    await new Promise(resolve => setTimeout(resolve, seconds));
+    console.log("fetching results in " + seconds + " seconds : ", query);
+    return [
+        {
+            id: 1,
+            title: query + seconds,
+            kinds: [ "Drama", "Comedy" ],
+        }
+    ]
 }
