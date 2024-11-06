@@ -4,45 +4,63 @@ import {
     createBrowserRouter, Link, Outlet,
     RouterProvider,
 } from "react-router-dom";
+import { useEffect } from "react";
+
+
 
 // Sayfa Bileşenleri
-const Home = () => <h1>Ana Sayfa</h1>;
-const About = () => <h1>Hakkında</h1>;
-const Contact = () => <h1>İletişim</h1>;
+const Teams = () => (
+    <div>
+        <h1>Takımlar</h1>
+        <Link to="/teams">teams</Link>
+        <Link to="/teams/1">detail</Link>
+        {/* Burada Outlet, alt rotaların içeriğini render edecek */}
+        <Outlet />
+    </div>
+);
 
-const Layout = () => {
+const TeamsIndex = () => {
+    useEffect(() => {
+console.log(33)
+        return () => {
+            console.log("...")
+        }
+    }, [])
     return (
-        <div style={{ display: 'flex' }}>
-            {/* Sabit Sidebar */}
-            <nav style={{ width: '200px', padding: '10px', borderRight: '1px solid #ddd' }}>
-                <ul style={{ listStyleType: 'none', padding: 0 }}>
-                    <li><Link to="/">Ana Sayfa</Link></li>
-                    <li><Link to="/about">Hakkında</Link></li>
-                    <li><Link to="/contact">İletişim</Link></li>
-                </ul>
-            </nav>
-
-            {/* Sayfa İçeriği */}
-            <div style={{ marginLeft: '20px', flex: 1 }}>xxx
-                <Outlet /> {/* Rotalara göre içerik burada değişecek */}
-            </div>
+        <div>
+            <h2>Takımlar Listesi</h2>
+            <p>Burada tüm takımların genel listesi gösterilecek.</p>
         </div>
     );
-};
+}
+
+const Team = () => (
+    <div>
+        <h2>Takım Detayı</h2>
+        <p>Belirli bir takımın detaylı bilgisi burada gösterilecek.</p>
+    </div>
+);
 
 // Router Yapılandırması
 const router = createBrowserRouter([
     {
-        path: '/',
-        element: <Layout />, // Layout bileşeni ana element olarak kullanıldı
+        path: '/teams',
+        element: <Teams />, // Takımlar ana bileşeni
         children: [
-            { path: '/', element: <Home /> },
-            { path: 'about', element: <About /> },
-            { path: 'contact', element: <Contact /> },
+            {
+                index: true, // Varsayılan içerik
+                element: <TeamsIndex />, // Varsayılan olarak Takımlar Listesi gösterilir
+            },
+            {
+                path: ':teamId', // Dinamik rota, örneğin /teams/123
+                element: <Team />, // Belirli bir takımın detayları gösterilir
+            },
         ],
     },
 ]);
-// Uygulamanın Render Edilmesi
+
+
+
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         <RouterProvider router={router} />
