@@ -8,6 +8,7 @@ import V7 from "./V7.tsx";
 import V8 from "./V8.tsx";
 import V9 from "./V9.tsx";
 import V10 from "./V10.tsx";
+import V11 from "./V11.tsx";
 import React, { useState } from "react";
 
 export default function App() {
@@ -26,7 +27,8 @@ export default function App() {
             {/*<V7/>*/}
             {/*<V8/>*/}
             {/*<V9/>*/}
-            <V10/>
+            {/*<V10/>*/}
+            <V11/>
         </main>
     )
 }
