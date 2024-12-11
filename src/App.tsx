@@ -3,6 +3,7 @@ import AccessAlarmsIcon from '@mui/icons-material/AccessAlarms';
 import { ButtonWithIconComponent } from "./components/ButtonWithIconComponent.tsx";
 import { ButtonWithIconRenderFunc } from "./components/ButtonWithIconRenderFunc.tsx";
 
+// resource :https://www.developerway.com/posts/react-component-as-prop-the-right-way
 
 const AccessAlarmIcon = (props) => (
     <AccessAlarmsIcon {...props} fontSize="large" color="error" />
