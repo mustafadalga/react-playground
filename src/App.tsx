@@ -212,9 +212,6 @@ const Example5 = () => {
     );
 };
 
-{ type: Input, key: 2 },
-
-
 
 /**
  * In this example, even if the `Input` component has the key `3` in both the dynamic array and the manual `Input`,
