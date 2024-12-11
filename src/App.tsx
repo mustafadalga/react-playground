@@ -212,6 +212,34 @@ const Example5 = () => {
     );
 };
 
+{ type: Input, key: 2 },
+
+
+
+/**
+ * In this example, even if the `Input` component has the key `3` in both the dynamic array and the manual `Input`,
+ * React will not re-render or move the static `Input` (key `3`) to a new position unnecessarily.
+ * When we mix dynamic and static elements, like in the code above,
+ * React creates an array of the dynamic elements and makes that entire array the first child in the children's array.
+ *
+ * This is the definition object React will create for this code:
+ *
+ * [
+ *   // The entire dynamic array is the first position in the children's array
+ *   [
+ *     { type: Input, key: 1 },
+ *     { type: Input, key: 2 },
+ *     { type: Input, key: 3 }
+ *   ],
+ *   {
+ *     type: Input, key: 3 // This is our manual Input after the dynamic array
+ *   }
+ * ];
+ *
+ * The manual `Input` will always occupy the second position in the array of children.
+ * There will be no re-mounting and no unnecessary rendering of components.
+ * This ensures React optimizes performance effectively, so there's no need to worry about a performance disaster.
+ */
 const Example6 = () => {
     const [ inputs, setInputs ] = useState([ 1, 2 ]);
     return (
