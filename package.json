@@ -10,6 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.1.6",
+    "@tailwindcss/vite": "^4.1.6",
+    "css-supports": "^0.1.1",
+    "lodash": "^4.17.21",
+    "lottie-colorify": "^0.8.0",
+    "postcss-safe-parser": "^7.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -23,8 +29,9 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
-    "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.3",
+    "postcss": "^8.5.3",
+    "react-lottie-player": "^2.1.0",
+    "tailwindcss": "^4.1.6",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
   }

@@ -1,11 +1,6 @@
+import DarkModeTailwindCss from "./components/DarkModeTailwindCss.tsx";
+import DarkModePureCSS from "./components/DarkModePureCSS.tsx";
 
-function App() {
-
-  return (
-    <>
-
-    </>
-  )
+export default function App() {
+    return <DarkModePureCSS/>
 }
-
-export default App
