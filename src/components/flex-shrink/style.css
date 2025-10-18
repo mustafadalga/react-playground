@@ -1,0 +1,19 @@
+.shrink-container {
+    display: flex;
+    width: 300px; /* too small for total basis */
+    border: 2px solid black;
+    margin-bottom: 20px;
+}
+
+.shrink-item {
+    flex-basis: 200px; /* total 600px */
+    border: 1px solid red;
+    text-align: center;
+    font-weight: bold;
+    color: #000;
+}
+
+/* shrink ratios */
+.shrink-item.item1 { flex-shrink: 1; background: lightblue; }
+.shrink-item.item2 { flex-shrink: 2; background: lightgreen; }
+.shrink-item.item3 { flex-shrink: 3; background: lightcoral; }

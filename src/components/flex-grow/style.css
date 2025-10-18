@@ -1,0 +1,16 @@
+.container {
+    display: flex;
+    width: 600px;
+    height: 100px;
+    border: 2px solid black;
+}
+
+.item {
+    flex-basis: 100px; /* Each starts at 100px */
+    border: 1px solid red;
+}
+
+/* Only grow ratio differs */
+.a { flex-grow: 1; background: lightblue; }
+.b { flex-grow: 2; background: lightgreen; }
+.c { flex-grow: 3; background: lightcoral; }
