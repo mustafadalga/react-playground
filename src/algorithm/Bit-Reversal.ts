@@ -5,10 +5,10 @@ export default function bitReversal(n) {
         str = (n % 2) + str
         n = Math.floor(n / 2)
     }
+    console.log(str)
 
     const remainPad = 32 - str.length
     let reverseStr = ""
-
     for (let i = str.length - 1; i >= 0; i--) {
         reverseStr = `${reverseStr}${str[i]}`
     }
@@ -36,4 +36,4 @@ function reverseBits(n) {
     }
     return result >>> 0; // ensure unsigned 32-bit
 }
-console.log(reverseBits(8))
+console.log(bitReversal(33))
