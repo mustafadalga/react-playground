@@ -1,14 +1,31 @@
+import { useCallback, useState } from "react";
 
-import { useState, useCallback } from "react";
+export enum DrawerState {
+    Closed = 'closed',
+    Opening = 'opening',
+    Open = 'open',
+    Closing = 'closing'
+}
 
 export function useAnimatedToggle() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [isAnimating, setIsAnimating] = useState(false);
+    const [state, setState] = useState<DrawerState>(DrawerState.Closed);
 
     const toggle = useCallback(() => {
-        setIsOpen(prev => !prev);
-        setIsAnimating(true);
+        setState(s =>
+            s === DrawerState.Open ? DrawerState.Closing : DrawerState.Opening
+        );
     }, []);
 
-    return { isOpen, isAnimating, setIsAnimating, toggle };
+    const onEnd = useCallback(() => {
+        setState(s =>
+            s === DrawerState.Opening ? DrawerState.Open : DrawerState.Closed
+        );
+    }, []);
+
+    return {
+        isOpen: state === DrawerState.Open || state === DrawerState.Opening,
+        shouldRender: state !== DrawerState.Closed,
+        toggle,
+        onEnd
+    };
 }
