@@ -1,3 +1,29 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+
+.slide-in {
+    animation: slideIn 600ms;
+}
+
+.slide-out {
+    animation: slideOut 600ms;
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translateX(22rem);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOut {
+    0% {
+
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(22rem);
+    }
+}
