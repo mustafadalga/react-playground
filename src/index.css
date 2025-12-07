@@ -1,15 +1,24 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 
-button{
-    background: white;
-    border: 1px solid #888;
-    color: #888;
-    border-radius: 8px;
+@theme {
+    --animate-fade: fade 0.5s;
+    @keyframes fade {
+        from {
+            opacity: 0.4;
+        }
+        to{
+            opacity: 1;
+        }
+    }
 }
-button:hover{
-    border-color: #f00;
-    color: #f00;
+
+.fade-box {
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }

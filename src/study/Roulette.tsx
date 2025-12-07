@@ -26,7 +26,7 @@ export default function Roulette() {
 
     return (
         <div className="p-4">
-            <button onClick={spin} className="p-2 bg-blue-600 text-white rounded">
+            <button onClick={spin} className="p-2 bg-blue-600 text-white rounded-sm">
                 Spin
             </button>
 
