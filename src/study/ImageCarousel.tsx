@@ -5,7 +5,47 @@ interface Image {
     src: string
 }
 
-export default function ImageCarousel({ images }: { images: Image[] }) {
+
+const images = [
+    {
+        src: '1.png',
+        alt: '1',
+    },
+    {
+        src: '2.png',
+        alt: '2',
+    },
+    {
+        src: 'https://placehold.co/600x900/1e293b/ffffff?text=Forest',
+        alt: 'Plants',
+    },
+    {
+        src: 'https://res.cloudinary.com/idemo/image/upload/friends.jpg',
+        alt: 'Forest',
+    },
+    {
+        src: 'https://res.cloudinary.com/idemo/image/upload/woman.jpg',
+        alt: 'Beach',
+    },
+    {
+        src: 'https://res.cloudinary.com/idemo/image/upload/sofa_cat.jpg',
+        alt: 'Yak',
+    },
+    {
+        src: 'https://res.cloudinary.com/idemo/image/upload/car_lady_dog.jpg',
+        alt: 'Hay',
+    },
+    {
+        src: 'https://res.cloudinary.com/idemo/image/upload/balloons.jpg',
+        alt: 'Building',
+    },
+];
+
+export default function Usage() {
+    return  <ImageCarousel images={images} />
+};
+
+function ImageCarousel({ images }: { images: Image[] }) {
     const [ active, setActive ] = useState(0)
 
     const handleNext = () => {
