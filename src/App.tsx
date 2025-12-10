@@ -1,31 +1,14 @@
-import users from "@/users.ts";
-import { useEffect, useState } from "react";
-import { getState, setState, subscribe } from "@/utils";
+import DemoV1 from "@/components/v1/Demo.tsx";
+import DemoV2 from "@/components/v2/Demo.tsx";
 
-console.log(users)
+
+
 export default function App() {
-    const [ count, setCount ] = useState(getState().count)
-
-    useEffect(() => {
-        return subscribe(() => setCount(getState().count))
-    }, [])
-
     return (
-        <div>
-            <button onClick={()=>setState({ count: getState().count + 1 })}>+ {count}</button>
-
-            <Child/>
+        <div className='grid p-10 gap-10'>
+            <DemoV1/>
+            <DemoV2/>
         </div>
     );
 }
 
-function Child() {
-    const [ count, setCount ] = useState(getState().count)
-
-    useEffect(() => {
-        return subscribe(() => setCount(getState().count))
-    }, [])
-
-
-    return <h1>{count}</h1>
-}
