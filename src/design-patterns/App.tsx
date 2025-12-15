@@ -1,5 +1,5 @@
 import { Observable } from "./Observable.ts";
-import EventEmitter from "@/algorithm/eventEmitter.ts";
+import EventEmitter from "@/algorithms/eventEmitter.ts";
 import { useEffect, useState } from "react";
 
 const observable = new Observable()

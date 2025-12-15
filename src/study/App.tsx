@@ -1,4 +1,4 @@
-import promisify from "@/algorithm/useDebounce.ts";
+import promisify from "@/algorithms/useDebounce.ts";
 import {
     ComponentType,
     JSX,
