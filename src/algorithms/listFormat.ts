@@ -1,5 +1,13 @@
-export default function listFormat(items, { length = 0, sorted, unique } = {}) {
-    let filteredItems = items.filter(item => typeof item == "string" && item.length || typeof item == "number" && item > 0)
+export default function listFormat(items: string[], options: {
+                                       sorted?: boolean,
+                                       unique?: boolean,
+                                       length?: number
+                                   } = {}
+) {
+    const { length = 0, sorted = false, unique = false } = options
+    let filteredItems = items.filter(item => item.trim().length)
+
+    if (!filteredItems.length) return ""
 
     if (unique) {
         filteredItems = [ ...new Set([ ...filteredItems ]) ]
@@ -11,29 +19,37 @@ export default function listFormat(items, { length = 0, sorted, unique } = {}) {
         filteredItems.sort((a, b) => a.localeCompare(b))
     }
 
-    const userLength =length<1 || length>filteredItems.length ? 0 : length// Math.max(0, Math.min(length, filteredItems.length-1))
-    console.log(userLength)
-    let str = ""
-    let currentLength = 0
-    for (let index = 0; index < filteredItems.length; index++) {
+    const showAll = length < 1 || length >= filteredItems.length
+    console.log(showAll)
+    const displayCount = showAll ? filteredItems.length - 1 : length
+    const visibleItems = filteredItems.slice(0, displayCount).join(", ")
 
-        if (userLength && currentLength < userLength) {
-            str += `${filteredItems[index]}${(currentLength === userLength - 1) ? "" : ","} `
-            currentLength++
-        } else if (!userLength && index < filteredItems.length - 1) {
-            str += `${filteredItems[index]}${(index === filteredItems.length - 2) ? "" : ","} `
-        } else if ((userLength && userLength === currentLength)) {
-            const remain = filteredItems.length - currentLength
-            str += `and ${remain} other${remain > 1 ? "s" : ""}`
-            break
-        } else if (!userLength && index === filteredItems.length - 1) {
-            str += `and ${filteredItems[index]}`
-            break
-        }
-
+    if (showAll) {
+        return `${visibleItems} and ${filteredItems[filteredItems.length - 1]}`
+    } else {
+        const remainItem = filteredItems.length - displayCount
+        return `${visibleItems} and ${filteredItems.length - displayCount} ${remainItem > 1 ? "others" : "other"}`
     }
-
-    return str
 }
 
-console.log(listFormat([ 'Bob', 'Ben', 'Tim', 'Jane', 'John' ], { length: 100 }))
+// https://www.greatfrontend.com/questions/javascript/list-format?practice=practice&tab=coding
+const cases: [ string[], { length?: number, sorted?: boolean, unique?: boolean }? ][] = [
+    [ [ 'Bob', 'Ben', 'Tim', 'Jane', 'John' ] ],
+    [ [ 'Bob', 'Ben', 'Tim', 'Jane', 'John' ], { length: 100 } ],
+    [ [ "", "" ] ],
+    [ [ 'Bob' ] ],
+    [ [ 'Bob', 'Alice' ] ],
+    //
+    [ [ 'Bob', 'Ben', 'Tim', 'Jane', 'John' ], { length: -1 } ],
+    [ [ 'Bob', 'Ben', 'Tim', 'Jane', 'John' ], { length: 4 } ],
+    [ [ 'Bob', 'Ben', 'Tim', 'Jane', 'John' ], { length: 3, sorted: true } ],
+    [ [ 'Bob', 'Ben', 'Tim', 'Jane', 'John', 'Bob' ], { length: 3, unique: true } ],
+    [ [ 'Bob', 'Ben', 'Tim', 'Jane', 'John' ], { length: 3, unique: true } ],
+    [ [ 'Bob', 'Ben', '', '', 'John' ] ],
+];
+
+
+for (let i = 0; i < cases.length; i++) {
+    const [ items, options ] = cases[i];
+    console.log(listFormat(items, options));
+}
