@@ -1,10 +1,10 @@
-import listFormat from "@/algorithms/listFormat.ts";
+import JobBoard from "@/study/job-board/JobBoard.tsx";
 
 
-listFormat
 export default function App() {
     return (
         <div className="flex flex-col gap-5">
+            <JobBoard/>
         </div>
     );
 }
